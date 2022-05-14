@@ -187,13 +187,29 @@ describe('Todos', () => {
     const todo1Response = await request(app)
       .post('/todos')
       .send({
-        title: 'test todo',
+        title: 'test todo 1',
+        deadline: todoDate
+      })
+      .set('username', userResponse.body.username);
+
+    const todo2Response = await request(app)
+      .post('/todos')
+      .send({
+        title: 'test todo 2',
+        deadline: todoDate
+      })
+      .set('username', userResponse.body.username);
+
+    const todo3Response = await request(app)
+      .post('/todos')
+      .send({
+        title: 'test todo 3',
         deadline: todoDate
       })
       .set('username', userResponse.body.username);
 
     await request(app)
-      .delete(`/todos/${todo1Response.body.id}`)
+      .delete(`/todos/${todo2Response.body.id}`)
       .set('username', userResponse.body.username)
       .expect(204);
 
@@ -201,7 +217,7 @@ describe('Todos', () => {
       .get('/todos')
       .set('username', userResponse.body.username);
 
-    expect(listResponse.body).toEqual([]);
+    expect(listResponse.body).toEqual([todo1Response.body, todo3Response.body]);
   });
 
   it('should not be able to delete a non existing todo', async () => {
